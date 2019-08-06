@@ -1,0 +1,58 @@
+commands:
+  greet:
+    description: |
+      Replace this text with a description for this command. # What will this command do? # Descriptions should be short, simple, and clear.
+    parameters:
+      greeting:
+        default: Hello
+        description: Select a proper greeting
+        type: string
+    steps:
+    - run:
+        command: echo << parameters.greeting >> world
+        name: Hello World
+description: |
+  Sample orb description # What will your orb allow users to do? # Descriptions should be short, simple, and clear.
+examples:
+  example:
+    description: |
+      Sample example description. # What will this example document? # Descriptions should be short, simple, and clear.
+    usage:
+      jobs:
+        build:
+          machine: true
+          steps:
+          - foo/hello:
+              username: Anna
+      orbs:
+        foo: bar/foo@1.2.3
+      version: 2.1
+executors:
+  default:
+    description: |
+      This is a sample executor using Docker and Node. # What is this executor? # Descriptions should be short, simple, and clear.
+    docker:
+    - image: circleci/node:<<parameters.tag>>
+    parameters:
+      tag:
+        default: latest
+        description: |
+          Pick a specific circleci/node image variant: https://hub.docker.com/r/circleci/node/tags
+        type: string
+jobs:
+  hello:
+    description: |
+      # What will this job do? # Descriptions should be short, simple, and clear. Sample description
+    executor: default
+    parameters:
+      greeting:
+        default: Hello
+        description: Select a proper greeting
+        type: string
+    steps:
+    - greet:
+        greeting: << parameters.greeting >>
+orbs:
+  hello: circleci/hello-build@0.0.5
+version: 2.1
+
