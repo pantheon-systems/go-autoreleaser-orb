@@ -162,15 +162,37 @@ approach:
 
 ### Build out notes
 
-```console
-$ circleci orb create pantheon-systems/go-autoreleaser
+Tried the `orb-init.sh` script but ended up having to do a lot of manual steps instead:
 
-# test publish the hello world orb
-$ circleci config pack src > orb.yml
-$ circleci orb publish orb.yml pantheon-systems/go-autoreleaser@dev:alpha
+1. create github repo: pantheon-systems/go-autoreleaser-orb
+1. follow project on circleci
+1. setup circle config:
 
-Orb `pantheon-systems/go-autoreleaser@dev:alpha` was published.
-Please note that this is an open orb and is world-readable.
+    ```console
+    mv config.yml .circleci/config.yml
+    sed -i -e 's/<orb-namespace>/pantheon-systems/g' .circleci/config.yml
+    sed -i -e 's/<orb-name>/go-autoreleaser/g' .circleci/config.yml
+    ```
 
-$
-```
+1. Create orb and test publish the first `dev:alpha` tag:
+
+    ```console
+    circleci orb create pantheon-systems/go-autoreleaser
+
+    # test publish the hello world orb
+    circleci config pack src > orb.yml
+    circleci orb publish orb.yml pantheon-systems/go-autoreleaser@dev:alpha
+    ```
+
+1. Create CircleCI API Token, add to the env vars on the project's CircleCI page as `CIRCLE_TOKEN`
+1. Create an SSH key to allow CircleCI to push tags to Github:
+
+    ```console
+    ssh-keygen -t rsa -b 4096 -m PEM -N "" -f circle-ssh-key
+    ```
+
+1. Add the private key (`circle-ssh-key`) to CircleCI under the project's SSH keys page
+   (https://circleci.com/gh/pantheon-systems/go-autoreleaser-orb/edit#ssh).
+   Set the hostname to `github.com`
+1. Add the public key (`circle-ssh-key.pub`) to Github as a new deploy key with write access
+   (https://github.com/pantheon-systems/go-autoreleaser-orb/settings/keys)
